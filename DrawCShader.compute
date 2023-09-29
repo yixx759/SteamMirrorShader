@@ -1,0 +1,137 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+
+#pragma kernel Fader
+#pragma kernel Comparer
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<half> Result;
+RWTexture2D<float4> Tocompare;
+RWBuffer<int> count;
+int Tocompare1;
+
+float2 muspos;
+
+int threshold;
+
+
+
+float sqrmag (float2 input)
+{
+    return input.x*input.x + input.y*input.y;
+
+
+    
+}
+
+float mag(float2 input)
+{
+    float temp = sqrmag(input);
+    return sqrt(temp);
+
+
+    
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    threshold *= threshold;
+    // TODO: insert actual code here!
+
+    float c = Result[id.xy];
+    
+    
+    float2 distfrom = float2(id.x + muspos.x*(-1) ,id.y + muspos.y*(-1));
+
+
+    
+    
+   
+     if ( sqrmag(distfrom) < threshold)
+     {
+        
+
+         c =1;
+     }
+    
+    Result[id.xy] = c;
+
+    
+}
+
+
+
+
+[numthreads(8,8,1)]
+void Comparer (uint3 id : SV_DispatchThreadID)
+{
+    // if (Result[id] == Tocompare[id])
+    // {
+    //     InterlockedAdd(Tocompare1, 1);
+    //
+    //
+    //  
+    //
+    //
+    //   
+    // }
+
+    if (Tocompare[id.xy].x != 0)
+    {
+        if (Result[id.xy] != 0)
+        {
+            InterlockedAdd(count[0], 1);
+    
+    
+     
+
+    
+      
+        }
+    }
+    else
+    {
+        if (Result[id.xy] == 0)
+        {
+            InterlockedAdd(count[0], 1);
+        }
+    }
+    
+    
+
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+[numthreads(8,8,1)]
+void Fader (uint3 id : SV_DispatchThreadID)
+{
+   
+    // TODO: insert actual code here!
+
+    float c = Result[id.xy] - 0.005;
+    
+    
+     
+
+    
+    Result[id.xy] = c;
+
+    
+    
+}
+

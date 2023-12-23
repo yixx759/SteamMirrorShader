@@ -1,5 +1,5 @@
 # SteamMirrorShader
-My Steam Mirror shader generates a randomised steam effect. This can be drawn on with either the mouse or a touch screen.
+My Steam Mirror shader generates a randomised steam effect using perlin noise. This can be drawn on with either the mouse or a touch screen.
 This can be used for gameplay by comparing it another image and scoring based on similarity.
 
 https://github.com/yixx759/SteamMirrorShader/assets/126923383/94b5997d-d034-4a81-9e4b-d5e47c84cfba
